@@ -1,9 +1,10 @@
 # Go Redis Test Hooks
 
+[![go-redis-test-hook](https://github.com/mjc-gh/go-redis-test-hook/actions/workflows/tests.yaml/badge.svg)](https://github.com/mjc-gh/go-redis-test-hook/actions/workflows/tests.yaml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/mjc-gh/go-redis-test-hook.svg)](https://pkg.go.dev/github.com/mjc-gh/go-redis-test-hook)
+
 Capture commands set to Redis for testing purposes with a
 [hook](https://pkg.go.dev/github.com/go-redis/redis/v9#Client.AddHook).
-
-**WIP**
 
 ```go
 func TestDoesSomethingWithRedis(t *testing.T) {
