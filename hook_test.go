@@ -3,6 +3,7 @@ package redistesthooks
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"testing"
 	"time"
 
@@ -29,8 +30,10 @@ func TestHookProcessHook(t *testing.T) {
 	ctx := context.TODO()
 	rdb, hook := setup()
 
-	t1 := time.Now().UnixNano()
-	t2 := time.Now().UnixNano()
+	t1 := float64(time.Now().UnixNano())
+	t2 := float64(time.Now().UnixNano())
+	az := strconv.FormatFloat(t1, 'f', -1, 64)
+	bz := strconv.FormatFloat(t2, 'f', -1, 64)
 
 	var cases = []expectations{
 		expectations{
@@ -44,15 +47,14 @@ func TestHookProcessHook(t *testing.T) {
 		expectations{
 			name: "complex args",
 			fn: func(ctx context.Context, rdb *redis.Client) {
-				rdb.HSet(ctx, "hash", map[string]interface{}{"key1": "value1", "key2": "value2"})
+				rdb.HSet(ctx, "hash", []string{"key1", "value1", "key2", "value2"})
 				rdb.ZAdd(ctx, "oset",
-					redis.Z{float64(t1), "a"},
-					redis.Z{float64(t2), "b"},
+					redis.Z{t1, "a"}, redis.Z{t2, "b"},
 				)
 			},
 			cmds: []string{
 				"HSET hash key1 value1 key2 value2",
-				fmt.Sprintf("ZADD oset %d a %d b", t1, t2),
+				fmt.Sprintf("ZADD oset %s a %s b", az, bz),
 			},
 		},
 	}
